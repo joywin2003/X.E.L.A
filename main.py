@@ -37,7 +37,6 @@ applications = {
 }
 
 chatStr = ""
-
 def chat(query):
     global chatStr
     chatStr += f"Joywin: {query}\nJarvis:"
@@ -47,7 +46,7 @@ def chat(query):
         messages=[
             {
                 "role": "user",
-                "content":f"You are Jarvis, my personal AI assistant, created by Joywin. Please assist me with:{query}"
+                "content":f"You are Jarvis, my personal A I assistant.{query}"
             }
         ],
         temperature=1,
@@ -58,6 +57,7 @@ def chat(query):
     )
     say(response.choices[0].message['content'])
     chatStr += response.choices[0].message['content']
+    print(chatStr)
     return response.choices[0].message['content']
 
 def ai(prompt):
@@ -95,20 +95,30 @@ def takeCommand():
         audio = r.listen(source)
         try:
             query = r.recognize_google(audio, language='en-in')
-            print(f"User said: {query}")
             return query
         except Exception as e:
             return "Some error has occurred, Sorry Joywin"
 
 
 if __name__ == '__main__':
-    say("Hey Joywin, what can I do for you today?")
+    say("Hello Joywin, How can I help you?")
     while True:
-        print("Listening...")
         query = takeCommand()
-        if "using AI".lower() in query.lower():
+        print("Listening...")
+        if "open" in query.lower():
+            for site, url in sites.items():
+                if f"Open {site}".lower() in query.lower():
+                    say(f"Opening {site}...")
+                    webbrowser.open(url)
+                    
+            for app, path in applications.items():
+                if f"Open {app}".lower() in query.lower():
+                    say(f"Opening {app}...")
+                    subprocess.run(["open", path])
+                    
+        elif "using AI".lower() in query.lower():
             ai(query)
-        elif "good night jarvis".lower() in query.lower():
+        elif "good night jarvis".lower() in query.lower() or "bye jarvis".lower() in query.lower():
             say(f"Good Night Joywin")
             exit()
         elif "the time" in query.lower():
@@ -120,13 +130,4 @@ if __name__ == '__main__':
             print("chatting...")
             chat(query)
     
-    
-        for site, url in sites.items():
-            if f"Open {site}".lower() in query.lower():
-                say(f"Opening {site}...")
-                webbrowser.open(url)
-        for app, path in applications.items():
-            if f"Open {app}".lower() in query.lower():
-                say(f"Opening {app}...")
-                subprocess.run(["open", path])
         
