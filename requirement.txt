@@ -1,3 +1,4 @@
 speechrecognition
 wikipedia
 openai
+pyaudio
