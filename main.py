@@ -2,7 +2,8 @@ import speech_recognition as sr
 import os
 import subprocess
 import webbrowser
-
+from datetime import datetime
+import openai
 
 def say(text):
     subprocess.run(["say", text])
@@ -48,3 +49,9 @@ if __name__ == '__main__':
             if f"Open {site}".lower() in query.lower():
                 say(f"Opening {site}...")
                 webbrowser.open(url)
+        if "good night jarvis".lower() in query.lower():
+            say(f"Bye Joywin")
+            exit()
+        elif "the time" in query.lower():
+            strftime = datetime.now().strftime("%H:%M:%S")
+            say(f"sir it's {strftime}")
