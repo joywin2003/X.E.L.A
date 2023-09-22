@@ -4,6 +4,32 @@ import subprocess
 import webbrowser
 from datetime import datetime
 import openai
+from config import API_KEY
+
+
+def ai(prompt):
+    openai.api_key = API_KEY
+    text = f"OpenAI response for Prompt:{prompt}\n*******************\n\n"
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+            "role": "user",
+            "content": prompt
+            }
+        ],
+        temperature=1,
+        max_tokens=256,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+    text += response.choices[0].message['content']
+    if not os.path.exists('OpenAI'):
+        os.mkdir('OpenAI')
+    with open(f"OpenAI/prompt-{''.join(prompt.split())}", "w") as f:
+        f.write(text)
+
 
 
 def say(text, speed=200):
@@ -55,7 +81,8 @@ if __name__ == '__main__':
             "VLC Media Player": "/Applications/VLC.app",
             "QuickTime Player": "/Applications/QuickTime Player.app",
         }
-
+        if "using AI".lower() in query.lower():
+            ai(query)
         for site, url in sites.items():
             if f"Open {site}".lower() in query.lower():
                 say(f"Opening {site}...")
@@ -69,4 +96,4 @@ if __name__ == '__main__':
         for app, path in applications.items():
             if f"Open {app}".lower() in query.lower():
                 say(f"Opening {app}...")
-                subprocess.run(["open", path])    
+                subprocess.run(["open", path])
