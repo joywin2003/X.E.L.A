@@ -115,7 +115,12 @@ if __name__ == '__main__':
                 if f"Open {app}".lower() in query.lower():
                     say(f"Opening {app}...")
                     subprocess.run(["open", path])
-                    
+        elif "search" in query:
+                search_query = query.replace("search", "").strip()
+                search_url = f"https://www.google.com/search?q={search_query}"
+                say(f"Searching for {search_query}...")
+                webbrowser.open(search_url)
+                            
         elif "using AI".lower() in query.lower():
             ai(query)
         elif "good night jarvis".lower() in query.lower() or "bye jarvis".lower() in query.lower():
